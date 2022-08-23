@@ -10,7 +10,7 @@ import (
 func TestRstrings(t *testing.T) {
 	want, _ := os.ReadFile("./strings_rstrings_test_go.txt")
 	got, _ := rstrings.Rstrings(".")
-	if got != string(want) {
+	if got[0] != string(want) {
 		t.Errorf("got %q want %q", got, want)
 	}
 }

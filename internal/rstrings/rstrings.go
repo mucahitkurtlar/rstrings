@@ -7,15 +7,15 @@ import (
 )
 
 // Rstrings returns the printable strings in the given directory.
-func Rstrings(args ...string) (output string, err error) {
+func Rstrings(args ...string) (outputs []string, err error) {
 	if len(args) == 0 {
-		return "", &ArgumentError{}
+		return nil, &ArgumentError{}
 	}
 	if argcheck.CheckHelp(args) {
-		return HelpText(), nil
+		return []string{HelpText()}, nil
 	}
 	if argcheck.CheckVersion(args) {
-		return VersionText(), nil
+		return []string{VersionText()}, nil
 	}
 	filepaths, err := files.GetFiles(args[0])
 	if err != nil {
@@ -24,10 +24,11 @@ func Rstrings(args ...string) (output string, err error) {
 	argsWithoutDir := args[1:]
 	for _, path := range filepaths {
 		allArgs := append(argsWithoutDir, path)
-		output, err = command.Run("strings", allArgs...)
+		output, err := command.Run("strings", allArgs...)
 		if err != nil {
-			return
+			return nil, err
 		}
+		outputs = append(outputs, output)
 	}
 	return
 }
